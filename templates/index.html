@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Facebook Link Cleaner</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <h1>Link Cleaner</h1>
+      <button id="themeToggle">🌙 Dark Mode</button>
+      <form method="post">
+        <label>Service ID</label>
+        <input type="text" name="service_id" id="service_id" placeholder="e.g. 357" value="{{ service_id }}">
+
+        <label>Quantity</label>
+        <input type="text" name="quantity" id="quantity" placeholder="e.g. 1000" value="{{ quantity }}">
+
+        <div class="mode-toggle">
+          <label><input type="radio" name="mode" value="single"
+            {% if selected_mode == 'single' %}checked{% endif %}
+            onclick="toggleMode()"> Single URL</label>
+          <label><input type="radio" name="mode" value="multi"
+            {% if selected_mode == 'multi' %}checked{% endif %}
+            onclick="toggleMode()"> Multiple URLs</label>
+        </div>
+
+        <div id="single-input" style="{% if selected_mode != 'single' %}display:none;{% endif %}">
+          <input type="text" name="input_url" id="input_url" placeholder="Enter a Facebook link">
+        </div>
+
+        <div id="multi-input" style="{% if selected_mode != 'multi' %}display:none;{% endif %}">
+          <textarea name="multi_urls" id="multi_urls" rows="12" placeholder="Paste multiple Facebook links, one per line"></textarea>
+        </div>
+
+        <button type="submit">Clean Link(s)</button>
+      </form>
+
+      <footer class="sidebar-footer">
+        <p>Developed with 🤍<br><a href="https://github.com/mcnielo" target="_blank">github.com/mcnielo</a></p>
+      </footer>
+    </aside>
+
+    <main class="main">
+      {% if cleaned_results %}
+        <div class="results">
+          <h2>Formatted Output</h2>
+          <ul id="fullResults">
+            {% for result in cleaned_results %}
+              <li>{{ result }}</li>
+            {% endfor %}
+          </ul>
+
+          <div class="copy-inline">
+            <span onclick="copyResults()" class="copy-action">
+              <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor">
+                <path d="M0 0h24v24H0V0z" fill="none"/>
+                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+              </svg>
+              Copy All
+            </span>
+
+            <span onclick="copyLinksOnly()" class="copy-action">
+              <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor">
+                <path d="M0 0h24v24H0V0z" fill="none"/>
+                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+              </svg>
+              Copy Links Only
+            </span>
+          </div>
+        </div>
+      {% endif %}
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}?v=7"></script>
+</body>
+</html>
